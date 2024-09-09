@@ -34,6 +34,7 @@ def submit():
 def store_vulnerabilities(vulnerabilities):
     new_vulns = []
     for vuln in vulnerabilities:
+        # Check if the vulnerability is already in the database
         if vuln_collection.count_documents({'description': vuln['description']}) == 0:
             vuln_collection.insert_one(vuln)
             new_vulns.append(vuln)
@@ -41,10 +42,10 @@ def store_vulnerabilities(vulnerabilities):
 
 # Send email alert for new vulnerabilities
 def send_email_alert(vulnerabilities):
-    sender_email = "youremail@example.com"
-    receiver_email = "alert@example.com"
-    password = "yourpassword"
-    
+    sender_email = "youremail@gmail.com"  # Use a valid email
+    receiver_email = "alert@example.com"  # Use the recipient's email
+    password = "yourpassword"  # Secure password for the sender's email
+
     subject = "VulnWatch Alert: New Vulnerabilities Detected"
     text = "New vulnerabilities detected:\n\n"
     for vuln in vulnerabilities:
@@ -55,7 +56,7 @@ def send_email_alert(vulnerabilities):
     message['From'] = sender_email
     message['To'] = receiver_email
 
-    with smtplib.SMTP_SSL("smtp.example.com", 465) as server:
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:  # Use Gmail's SMTP
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, message.as_string())
 
